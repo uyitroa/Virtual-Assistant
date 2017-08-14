@@ -37,7 +37,6 @@ class MyFrame:
 			for x in range(len(string)):
 				self.onEnter(string[x])
 				time.sleep(1)
-			break
 	def listen(self):
 		r = sr.Recognizer()
 		speec = ""
@@ -64,13 +63,25 @@ class MyFrame:
 	
 	def onEnter(self,input):
 		if "what" in input or "who" in input:
-			result = ""
-			try:
-				result = self.checkWiki(input)
-				print result
-			except:
-				self.searchWeb(input)
-			self.speak(result)
+			if "weather" in input:
+				thereis = self.thereIsGeo(input)
+				if thereis != False:
+					location = self.getCountry(thereis)
+					add = "in " + location
+				else:
+					location = self.get_MyLocation()
+					add = ""
+				weather = self.weatherAtplace(location)
+				weather = "The temperature " + add + "is " + str(weather[0]) + " degrees and the wind is " + str(weather[1]) + "miles, the rain volume is " + str(weather[2])
+				#self.speak(weather)
+			else:
+				result = ""
+				try:
+					result = self.checkWiki(input)
+					print result
+				except:
+					self.searchWeb(input)
+				self.speak(result)
 
 		if "plus" in input or "minus" in input or "multiply" in input or "divide" in input:
 			try:
