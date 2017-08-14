@@ -228,10 +228,6 @@ class MyFrame:
 		time.sleep(0.1)
 		pyautogui.press('enter')
 
-	def speak(self,input):
-		engine = pyttsx.init()
-		engine.speak(input)
-		engine.runAndWait()
 
 	def playMusicMac(self,input):
 		a = input.split(" ")
