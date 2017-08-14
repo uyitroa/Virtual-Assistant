@@ -10,3 +10,10 @@ os.system("pip install geopy")
 os.system("pip install pyowm")
 os.system("pip install PyDictionary")
 os.system("pip install wikipedia")
+try:
+  brew install blueutil
+except:
+  try:
+    sudo port install blueutil
+  except:
+    print "Cannot install bluetil\nPlease install homebrew, then do $ brew intsall blueutil"
