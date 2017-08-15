@@ -73,7 +73,7 @@ class MyFrame:
 					add = ""
 				weather = self.weatherAtplace(location)
 				weather = "The temperature " + add + "is " + str(weather[0]) + " degrees and the wind is " + str(weather[1]) + "miles, the rain volume is " + str(weather[2])
-				#self.speak(weather)
+				self.speak(weather)
 			else:
 				result = ""
 				try:
@@ -101,7 +101,9 @@ class MyFrame:
 				failed = True
 		elif "search" in input:
 			if "youtube" in input.lower():
+				time.sleep(1)
 				self.speak("Searching on Youtube")
+				
 				self.onYT(input)
 			else:
 				a = input.split(" ")
@@ -120,25 +122,16 @@ class MyFrame:
 		elif "press" in input:
 			self.pressure(input)
 		
-		elif "weather" in input:
-			thereis = self.thereIsGeo(input)
-			if thereis != False:
-				location = self.getCountry(thereis)
-				add = "in " + location
-			else:
-				location = self.get_MyLocation()
-				add = ""
-			weather = self.weatherAtplace(location)
-			weather = "The temperature " + add + "is " + str(weather[0]) + " degrees and the wind is " + str(weather[1]) + "miles, the rain volume is " + str(weather[2])
-			self.speak(weather)
 		
 		elif "synonym" in input or "antonym" in input:
 			self.speak(self.wordFunction(input))
 		
-		elif "quit" == input or "exit" == input or "close" == input:
-			pyautogui.hotkey('command','q')
+		elif "quit" == input.lower() or "exit" == input.lower() or "close" == input.lower():
+			self.speak("Goodbye")
+			pyautogui.hotkey('command','w')
+			pyautogui.press('enter')
 		
-		elif "quit" in input or "exit" in input or "close" in input:
+		elif "quit" in input.lower() or "exit".lower() in input.lower() or "close" in input.lower():
 			self.speak("Quitting app")
 			self.closeApp(input)
 	
@@ -183,6 +176,7 @@ class MyFrame:
 				b += string[y]
 			a[x] = b
 		input = " ".join(a)
+		self.speak('Opening' + input)
 		appName = "/Applications/" + input + ".app"
 		ret = execute('open ' + appName)
 		if ret[0] == 1:
@@ -357,7 +351,8 @@ class MyFrame:
 		return location
 
 	def weatherAtplace(self,location):
-		owm = pyowm.OWM('your API Key')
+		self.openFile()
+		owm = pyowm.OWM(self.apikey)
 		observation = owm.weather_at_place(location)
 		weather = observation.get_weather()
 		temp =  weather.get_temperature(unit='celsius')
@@ -373,6 +368,7 @@ class MyFrame:
 					rain = value
 				break
 		temperature = [temp,wind,rain]
+		print temperature
 		return temperature
 
 	def thereIsGeo(self,sentence):
@@ -398,7 +394,7 @@ class MyFrame:
 			return self.findValidWord("synonym")
 		elif "antonym" in self.cleaned:
 			return self.findValidWord("antonym")
-	def  findValidWord(self,typo):
+	def findValidWord(self,typo):
 		input = self.cleaned.split(typo + " ")
 		dict = "dictionary."
 		args = "(input[1])"
@@ -428,6 +424,7 @@ class MyFrame:
 			os.system("rm hello.mp3")
 		except:
 			os.system('say "'+texto.encode('utf-8')+'"')
+		time.sleep(1)
 	def removeWord(self,word,cleaned):
 		for x in range(len(cleaned)):
 			if cleaned[x].lower() == word:
@@ -436,6 +433,10 @@ class MyFrame:
 			print cleaned[y]
 			cleaned.remove(cleaned[0])
 		return cleaned
+	def openFile(self):
+		openFile = open("apikey.txt","r")
+		readFile = openFile.read()
+		self.apikey = readFile[0:len(readFile) - 1]
 if __name__ == "__main__":
 	a = MyFrame()
 	
