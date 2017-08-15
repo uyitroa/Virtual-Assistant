@@ -20,3 +20,5 @@ except:
 		os.system("sudo port install blueutil")
 	except:
 		print "YOU NEED TO INSTALL HOMEBREW"
+		
+print "\nALSO, YOU NEED TO GET AN API KEY AT https://home.openweathermap.org/users/sign_up, then copy the api key to a file named apikey.txt"
