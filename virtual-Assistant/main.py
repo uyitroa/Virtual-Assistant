@@ -357,7 +357,7 @@ class MyFrame:
 		return location
 
 	def weatherAtplace(self,location):
-		owm = pyowm.OWM('a1f1ded37662e24c4297b19339fd02f7')
+		owm = pyowm.OWM('your API Key')
 		observation = owm.weather_at_place(location)
 		weather = observation.get_weather()
 		temp =  weather.get_temperature(unit='celsius')
