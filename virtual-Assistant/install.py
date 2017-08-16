@@ -1,6 +1,6 @@
 import os
-print "PLEASE ALLOW JAVASCRIPT FROM APPLE EVENT ON SAFARI AND MAKE SURE THAT SAFARI IS YOUR DEFAULT BROWSER"
-a = raw_input("Tell me when you are ready: ")
+print "\nPLEASE ALLOW JAVASCRIPT FROM APPLE EVENT ON SAFARI AND MAKE SURE THAT SAFARI IS YOUR DEFAULT BROWSER\n"
+os.system("easy_install pip")
 os.system("pip install appscript")
 #os.system("pip install webbrowser")
 os.system("pip install nltk")
