@@ -30,7 +30,6 @@ class MyFrame:
 		# Record Audio
 		while True:
 			speec = self.listen()
-			#speec = "who is Thomas Edison"
 			if not "plus" in speec or "minus" in speec or "multiply" in speec or "divide" in speec:
 				string = speec.split(" and ")
 
