@@ -12,6 +12,7 @@ So, here is all command that you can do with it:
  - what is the synonym/antonym of <a word(life)>
  - quit/exit/close <name a application>
  - what is the weather at Chicago/ what is the weather today
+ - call <someone> via Skype
 
-But before, do $ sudo python install.py
+But before, do $sudo python install.py
 Thank you for reading and enjoy the VA
