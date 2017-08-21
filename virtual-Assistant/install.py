@@ -13,12 +13,10 @@ os.system("pip install pyowm")
 os.system("pip install PyDictionary")
 os.system("pip install wikipedia")
 os.system("pip install gtts")
-try:
-	os.system("brew install blueutil")
-except:
-	try:
-		os.system("sudo port install blueutil")
-	except:
-		print "YOU NEED TO INSTALL HOMEBREW"
-		
+os.system("pip install pyobjc-core")
+os.system("pip pyobj")
+os.system("pip pyttx")
+os.system("pip pyaudio")
+os.system("brew install blueutil")
+os.system("brew install portaudio")
 print "\nALSO, YOU NEED TO GET AN API KEY AT https://home.openweathermap.org/users/sign_up, then copy the api key to a file named apikey.txt"
