@@ -478,4 +478,3 @@ class MyFrame:
 		self.apikey = readFile[0:len(readFile) - 1]
 if __name__ == "__main__":
 	a = MyFrame()
-	
