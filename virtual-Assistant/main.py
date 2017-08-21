@@ -28,6 +28,8 @@ import os
 class MyFrame:
 	def __init__(self):
 		# Record Audio
+		master = os.popen("whoami").read()
+		self.speak("Hello " + master)
 		while True:
 			#speec = self.listen()
 			speec = "call contacts by Skype"
@@ -43,7 +45,7 @@ class MyFrame:
 		speec = ""
 		with sr.Microphone() as source:
 			r.adjust_for_ambient_noise(source)
-			self.speak("Please say something?")
+			self.speak("Please say something")
 			print "Kay"
 			audio = r.listen(source)
 
@@ -478,3 +480,4 @@ class MyFrame:
 		self.apikey = readFile[0:len(readFile) - 1]
 if __name__ == "__main__":
 	a = MyFrame()
+	
