@@ -29,19 +29,22 @@ class MyFrame:
 	def __init__(self):
 		# Record Audio
 		while True:
-			speec = self.listen()
+			#speec = self.listen()
+			speec = "call contacts by Skype"
 			if not "plus" in speec or "minus" in speec or "multiply" in speec or "divide" in speec:
 				string = speec.split(" and ")
 
 			for x in range(len(string)):
 				self.onEnter(string[x])
 				time.sleep(1)
+			break
 	def listen(self):
 		r = sr.Recognizer()
 		speec = ""
 		with sr.Microphone() as source:
 			r.adjust_for_ambient_noise(source)
 			self.speak("Please say something?")
+			print "Kay"
 			audio = r.listen(source)
 
 		try:
@@ -57,9 +60,8 @@ class MyFrame:
 			self.speak("Could you repeat please?")
 			speec = raw_input("Could you repeat please? >> ")
 		return speec
-	
-	
-	
+
+
 	def onEnter(self,input):
 		if "what" in input or "who" in input:
 			if "weather" in input:
@@ -125,6 +127,9 @@ class MyFrame:
 		elif "synonym" in input or "antonym" in input:
 			self.speak(self.wordFunction(input))
 		
+		elif "call" in input.lower():
+			self.callVia(input)
+
 		elif "quit" == input.lower() or "exit" == input.lower() or "close" == input.lower():
 			self.speak("Goodbye")
 			pyautogui.hotkey('command','w')
@@ -297,7 +302,6 @@ class MyFrame:
 			if cleaned[x].lower() == "youtube":
 				break
 		for y in range(x+1):
-			print cleaned[y]
 			cleaned.remove(cleaned[0])
 		input = " ".join(cleaned)
 		self.waitSiteLoaded('"https://www.youtube.com"')
@@ -424,6 +428,7 @@ class MyFrame:
 		except:
 			os.system('say "'+texto.encode('utf-8')+'"')
 		time.sleep(1)
+	
 	def removeWord(self,word,cleaned):
 		for x in range(len(cleaned)):
 			if cleaned[x].lower() == word:
@@ -432,6 +437,41 @@ class MyFrame:
 			print cleaned[y]
 			cleaned.remove(cleaned[0])
 		return cleaned
+
+	def callVia(self,input):
+		tokens = word_tokenize(input)
+		stop_words = set(stopwords.words('english'))
+		clean_tokens = [w for w in tokens if not w in stop_words]
+		input = self.removeWord('call',clean_tokens)
+		if "skype" in input or "Skype" in input:
+			try:
+				input.remove('skype')
+			except:
+				input.remove('Skype')
+			name = " ".join(input)
+			print name
+			self.callBySkype(name)
+
+	def callBySkype(self,input):
+		app = os.popen('ps -ax | grep /Applications/Skype.app').read().split('\n')
+		if 'grep' in app[0]:
+			delay = '3'
+		else:
+			delay = '1'
+		fullScreenScript = 'set toggleOnFull to false\n\nset myList to {"Skype"}\nrepeat with theItem in myList\n\n    tell application theItem\n        activate\n        delay ' + delay + '\n        (* \n  Initially from http://stackoverflow.com/questions/8215501/applescript-use-lion-fullscreen\n*)\n        set isfullscreen to false\n        tell application "System Events" to tell process theItem\n            set isfullscreen to value of attribute "AXFullScreen" of window 1\n        end tell\n        --display dialog "var " & isfullscreen\n\n        if isfullscreen is toggleOnFull then\n            tell application "System Events" to keystroke "f" using {command down, control down}\n            delay 1\n        end if\n    end tell\n\nend repeat\n'
+		p = Popen(['osascript', '-'], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+		stdout, stderr = p.communicate(fullScreenScript)
+		pyautogui.moveTo(1260,20)
+		time.sleep(0.5)
+		pyautogui.click()
+		pyautogui.typewrite(input)
+		time.sleep(0.2)
+		pyautogui.press('enter')
+		time.sleep(1)
+		pyautogui.moveTo(1360,87,0.5)
+		time.sleep(0.2)
+		pyautogui.click()
+
 	def openFile(self):
 		openFile = open("apikey.txt","r")
 		readFile = openFile.read()
