@@ -19,4 +19,5 @@ os.system("pip pyttx")
 os.system("pip pyaudio")
 os.system("brew install blueutil")
 os.system("brew install portaudio")
+os.system("chmod +x dontforget")
 print "\nALSO, YOU NEED TO GET AN API KEY AT https://home.openweathermap.org/users/sign_up, then copy the api key to a file named apikey.txt"
