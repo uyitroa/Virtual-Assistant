@@ -24,6 +24,11 @@ import pyowm
 from PyDictionary import PyDictionary
 import wikipedia
 import os
+from datetime import datetime
+from datetime import date
+import parsedatetime as pdt
+
+
 
 class MyFrame:
 	def __init__(self):
@@ -32,14 +37,18 @@ class MyFrame:
 		self.speak("Hello " + master)
 		while True:
 			#speec = self.listen()
-			speec = "call contacts by Skype"
+			speec = "remind me to take a bath in 1 minute"
 			if not "plus" in speec or "minus" in speec or "multiply" in speec or "divide" in speec:
 				string = speec.split(" and ")
 
 			for x in range(len(string)):
 				self.onEnter(string[x])
 				time.sleep(1)
+			
 			break
+
+
+
 	def listen(self):
 		r = sr.Recognizer()
 		speec = ""
@@ -131,6 +140,9 @@ class MyFrame:
 		
 		elif "call" in input.lower():
 			self.callVia(input)
+		
+		elif "remind" in input.lower():
+			self.remindMe(input)
 
 		elif "quit" == input.lower() or "exit" == input.lower() or "close" == input.lower():
 			self.speak("Goodbye")
@@ -149,42 +161,49 @@ class MyFrame:
 		tokens = word_tokenize(input)
 		stop_words = set(stopwords.words('english'))
 		cleaned = [w for w in tokens if not w in stop_words]
-		#for x in range(len(cleaned)):
-		#	if cleaned[x].lower() == "what" or cleaned[x].lower() == "who":
-		#		break
+
 		if "what" in cleaned:
 			self.removeWord("what",cleaned)
+		
 		elif "who" in cleaned:
 			self.removeWord("who",cleaned)
+		
 		target = " ".join(cleaned)
+		
 		return wikipedia.summary(target)
 
 	def Calculator(self,input):
 		tokens = word_tokenize(input)
 		stop_words = set(stopwords.words('english'))
 		nput = [w for w in tokens if not w in stop_words]
+		
 		input = " ".join(nput)
 		a = input.replace("plus","+")
 		b = a.replace("minus","-")
 		c = b.replace("multiply","*")
 		input = c.replace("divide","/")
 		result = eval(input)
+		
 		return result
 	
 	def openApp(self,input):
 		a = input.split(" ")
 		a = self.removeWord("open",a)
+		
 		for x in range(len(a)):
 			string = a[x]
 			letter = string[0].upper()
 			b = letter
+		
 			for y in range(1,len(string)):
 				b += string[y]
 			a[x] = b
+		
 		input = " ".join(a)
 		self.speak('Opening' + input)
 		appName = "/Applications/" + input + ".app"
 		ret = execute('open ' + appName)
+		
 		if ret[0] == 1:
 			self.searchApp(input)
 	
@@ -194,22 +213,29 @@ class MyFrame:
 		if "bluetooth" in input.lower():
 			if "on" in input.lower():
 				os.system("blueutil on")
+		
 			elif "off" in input.lower():
 				os.system("blueutil off")
+		
 		if "wifi" in input.lower() or "wi-fi" in input.lower():
 			if "on" in input.lower():
 				os.system("echo rairyuuaottg | sudo -S ifconfig en0 up")
+		
 			elif "off" in  input.lower():
 				os.system("echo rairyuuaottg | sudo -S ifconfig en0 down")
 	
 	def openWeb(self,input):
 		if "website" in input:
 			input = " ".join(self.removeWord("website"))
+		
 		elif "web" in input:
 			input = " ".join(self.removeWord("web"))
+		
 		elif "site" in input:
 			input = " ".join(self.removeWord("site"))
+		
 		site = "https://www."+input.lower()+".com"
+		
 		try:
 			urllib2.urlopen(site)
 			self.speak("Opening site " + input)
@@ -221,13 +247,16 @@ class MyFrame:
 		os.system("open /Applications/Safari.app")
 		webbrowser.open_new("https://www.google.com")
 		self.waitSiteLoaded('"https://www.google.com"')
+		
 		pyautogui.typewrite(input, interval=0.00001)
 		pyautogui.press('enter')
 		time.sleep(1)
+		
 		link = appscript.app("Safari").windows.first.current_tab.URL()
 		url = '"' + link + '"'
 
 		self.waitSiteLoaded(url)
+		
 		r = requests.get(link)
 		soup = BeautifulSoup(r.text, "html.parser")
 		link = soup.find('cite').text
@@ -242,45 +271,61 @@ class MyFrame:
 
 	def playMusicMac(self,input):
 		a = input.split(" ")
+		
 		if "play" in input:
 			a = self.removeWord("play",a)
+		
 		if "music" in input:
 			a = self.removeWord("music",a)
 		input = " ".join(a)
+		
 		os.chdir("/Users/Raishin/Music/iTunes/iTunes Media/Music/Unknown Artist/Unknown Album/")
 		strMusic = os.popen("ls").read()
 		strMusic = str(strMusic)
+		
 		print strMusic
 		list = strMusic.split("\n")
 		print list
+		
 		for x in range(len(list)):
 			if str(input) in str(list[x]).lower() or str(input) == str(list[x]).lower():
 				a = str(list[x])
 				break
 		b = ""
+		
 		for x in range(len(a)):
 			if a[x] == " ":
 				b += "\ "
+		
 			elif a[x] == "(":
 				b += "\("
+		
 			elif a[x] == ")":
 				b+= "\)"
+		
 			else:
 				b+=a[x]
+		
 		music = b
 		ret = execute('open ' + music)
+		
 		if ret[0] == 1:
 			self.searchApp(input)
 
 	def typePy(self,input):
 		a = input.split(" ")
+		
 		if "type" in input:
 			a = self.removeWord("type",a)
+		
 		elif "write" in input:
 			a = self.removeWord("write",a)
+		
 		elif "send" in input:
 			a = self.removeWord("send",a)
+		
 		input = " ".join(a)
+		
 		pyautogui.typewrite(input,interval=0.00000001)
 		pyautogui.press('enter')
 	
@@ -291,27 +336,31 @@ class MyFrame:
 
 	def waitSiteLoaded(self,url):
 		scpt = 'tell application "Safari" to open location ' + url + '\nwaitForPageLoaded(20)\n\non waitForPageLoaded(timeoutValue) -- in seconds\n   delay 1\n   repeat with i from 1 to timeoutValue\n       tell application "Safari"\n           if name of current tab of window 1 is not "Loading" then exit repeat\n       end tell\n       delay 1\n   end repeat\n   if i is timeoutValue then return false\n   tell application "Safari"\n       repeat until (do JavaScript "document.readyState" in document 1) is "complete"\n           delay 0.5\n       end repeat\n   end tell\n   return true\nend waitForPageLoaded\n'
-
 		p = Popen(['osascript', '-'], stdin=PIPE, stdout=PIPE, stderr=PIPE)
-		#webbrowser.open(url)
 		stdout, stderr = p.communicate(scpt)
 
 
 	def onYT(self,input):
 		webbrowser.open("https://www.youtube.com")
 		cleaned = input.split(" ")
+		
 		for x in range(len(cleaned)):
 			if cleaned[x].lower() == "youtube":
 				break
+		
 		for y in range(x+1):
 			cleaned.remove(cleaned[0])
+		
 		input = " ".join(cleaned)
 		self.waitSiteLoaded('"https://www.youtube.com"')
+		
 		pyautogui.typewrite(input,interval=0.0000000001)
 		pyautogui.press('enter')
 		time.sleep(1)
+		
 		link = '"' + appscript.app("Safari").windows.first.current_tab.URL() + '"'
 		self.waitSiteLoaded(link)
+		
 		pyautogui.moveTo(400,300)
 		pyautogui.click()
 
@@ -319,12 +368,16 @@ class MyFrame:
 		a = input.split(" ")
 		if "quit" in input:
 			a = self.removeWord("quit",a)
+		
 		elif "exit" in input:
 			a = self.removeWord("exit",a)
+		
 		elif "close" in input:
 			a = self.removeWord("close",a)
+		
 		input = " ".join(a)
 		apps = os.popen("ps -ax | grep /Applications").read()
+		
 		if input.lower() in apps.lower():
 			pyautogui.hotkey('command','space')
 			pyautogui.typewrite(input)
@@ -339,11 +392,14 @@ class MyFrame:
 		preApp_list = element_preList.split('/')
 		name_withDot = preApp_list[len(preApp_list) - 1]
 		currentApp_name = ''
+		
 		for element in range(len(name_withDot)):
 			if name_withDot[element] == '.':
 				break
+		
 			else:
 				currentApp_name += name_withDot[element]
+		
 		return currentApp_name
 			
 	def getCountry(self,city):
@@ -357,23 +413,30 @@ class MyFrame:
 
 	def weatherAtplace(self,location):
 		self.openFile()
+		
 		owm = pyowm.OWM(self.apikey)
 		observation = owm.weather_at_place(location)
 		weather = observation.get_weather()
 		temp =  weather.get_temperature(unit='celsius')
+		
 		temp = temp['temp']
 		wind = weather.get_wind()
+		
 		wind = wind['speed']
 		rain = weather.get_rain()
+		
 		if bool(rain) == False:
 			rain = 0
+		
 		else:
 			for value in rain:
 				if value != "":
 					rain = value
 				break
+		
 		temperature = [temp,wind,rain]
 		print temperature
+		
 		return temperature
 
 	def thereIsGeo(self,sentence):
@@ -381,13 +444,17 @@ class MyFrame:
 		stop_words = set(stopwords.words('english'))
 		clean_tokens = [w for w in tokens if not w in stop_words]
 		tagged = nltk.pos_tag(clean_tokens)
+		
 		geo = nltk.ne_chunk(tagged)
 		geo = str(geo)
+		
 		if "GPE" in geo:
 			ge = geo.split("GPE ")
 			go = ge[1].split("/")
 			geo = go[0]
+		
 			return geo
+		
 		return False
 
 	def wordFunction(self,input):
@@ -395,30 +462,35 @@ class MyFrame:
 		stop_words = set(stopwords.words('english'))
 		clean_tokens = [w for w in tokens if not w in stop_words]
 		self.cleaned = " ".join(clean_tokens)
+		
 		if "synonym" in self.cleaned:
 			return self.findValidWord("synonym")
+		
 		elif "antonym" in self.cleaned:
 			return self.findValidWord("antonym")
 	def findValidWord(self,typo):
 		input = self.cleaned.split(typo + " ")
+		
 		dict = "dictionary."
 		args = "(input[1])"
+		
 		dictionary=PyDictionary()
-		#try:
+		
 		result = eval(dict + typo + args)
 		listWord = [',','or','then','and']
+		
 		string = ""
+		
 		for x in range(len(result) - 1):
 			try:
 				string += result[x] + " " + listWord[x] + " "
 			except:
 				string += result[x] + " and "
+		
 		print result[len(result) - 1]
 		string += result[len(result) - 1]
 		sentence = "The " + typo + " of " + input[1] + " is " + string
-		print sentence
-		#except:
-		#	sentence = "Cannot recognize the sentence"
+		
 		return sentence
 	
 	def speak(self,texto):
@@ -429,29 +501,33 @@ class MyFrame:
 			os.system("rm hello.mp3")
 		except:
 			os.system('say "'+texto.encode('utf-8')+'"')
+		
 		time.sleep(1)
 	
 	def removeWord(self,word,cleaned):
 		for x in range(len(cleaned)):
 			if cleaned[x].lower() == word:
 				break
+		
 		for y in range(x+1):
-			print cleaned[y]
 			cleaned.remove(cleaned[0])
+
 		return cleaned
 
 	def callVia(self,input):
 		tokens = word_tokenize(input)
 		stop_words = set(stopwords.words('english'))
 		clean_tokens = [w for w in tokens if not w in stop_words]
+		
 		input = self.removeWord('call',clean_tokens)
+		
 		if "skype" in input or "Skype" in input:
 			try:
 				input.remove('skype')
 			except:
 				input.remove('Skype')
+			
 			name = " ".join(input)
-			print name
 			self.callBySkype(name)
 
 	def callBySkype(self,input):
@@ -463,16 +539,81 @@ class MyFrame:
 		fullScreenScript = 'set toggleOnFull to false\n\nset myList to {"Skype"}\nrepeat with theItem in myList\n\n    tell application theItem\n        activate\n        delay ' + delay + '\n        (* \n  Initially from http://stackoverflow.com/questions/8215501/applescript-use-lion-fullscreen\n*)\n        set isfullscreen to false\n        tell application "System Events" to tell process theItem\n            set isfullscreen to value of attribute "AXFullScreen" of window 1\n        end tell\n        --display dialog "var " & isfullscreen\n\n        if isfullscreen is toggleOnFull then\n            tell application "System Events" to keystroke "f" using {command down, control down}\n            delay 1\n        end if\n    end tell\n\nend repeat\n'
 		p = Popen(['osascript', '-'], stdin=PIPE, stdout=PIPE, stderr=PIPE)
 		stdout, stderr = p.communicate(fullScreenScript)
+		
 		pyautogui.moveTo(1260,20)
 		time.sleep(0.5)
+		
 		pyautogui.click()
 		pyautogui.typewrite(input)
 		time.sleep(0.2)
+		
 		pyautogui.press('enter')
 		time.sleep(1)
+		
 		pyautogui.moveTo(1360,87,0.5)
 		time.sleep(0.2)
+		
 		pyautogui.click()
+
+	def remindMe(self,input):
+		listOfCommand = input.split(' ')
+		print input
+		if "remind" in listOfCommand:
+			print "entered"
+			listOfCommand = self.removeWord("remind",listOfCommand)
+		
+		if "me" in listOfCommand:
+			listOfCommand = self.removeWord("me",listOfCommand)
+
+		if "to" in listOfCommand[0]:
+			try:
+				listOfCommand.remove("to")
+			except:
+				pass
+		input = " ".join(listOfCommand)
+		self.speak("Okay i will remind you to " + input)
+		words = [" at "," in "," on "]
+		separated_words = None
+		
+		for x in range(len(words)):
+			if words[x] in input:
+				separated_words = words[x]
+				break
+		
+		listOfCommand = input.split(separated_words)
+		time_string = separated_words + listOfCommand[len(listOfCommand) - 1]
+		listOfCommand.remove(listOfCommand[len(listOfCommand) - 1])
+		input = " ".join(listOfCommand)
+		cal = pdt.Calendar()
+		now = str(datetime.now())
+		now = now.split('.')
+		now.remove(now[1])
+		now = now[0]
+		#print type(now)
+		now = datetime.strptime(now, "%Y-%m-%d %H:%M:%S")
+		alarmDate = cal.parseDT(time_string, now)[0]
+		in_minutes = self.calculTime_from(str(now), str(alarmDate))
+		os.system('./dontforget ' + input + "in " + str(in_minutes) + "m")
+
+
+	def calculTime_from(self,now,toin):
+		import time
+		fmt = '%Y-%m-%d %H:%M:%S'
+		d1 = datetime.strptime(now, fmt)
+		d2 = datetime.strptime(toin, fmt)
+
+		# Convert to Unix timestamp
+		d1_ts = time.mktime(d1.timetuple())
+		d2_ts = time.mktime(d2.timetuple())
+		time = int(d2_ts-d1_ts) / 60
+		return time
+		
+
+	def getIndexOf(self,input,list):
+		for x in range(len(list)):
+			if list[x] == input:
+				return x
+		return False
 
 	def openFile(self):
 		openFile = open("apikey.txt","r")
@@ -480,4 +621,3 @@ class MyFrame:
 		self.apikey = readFile[0:len(readFile) - 1]
 if __name__ == "__main__":
 	a = MyFrame()
-	
