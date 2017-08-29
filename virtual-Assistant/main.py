@@ -45,7 +45,7 @@ class MyFrame:
 				self.onEnter(string[x])
 				time.sleep(1)
 			
-			break
+			#break
 
 
 
