@@ -36,8 +36,8 @@ class MyFrame:
 		master = os.popen("whoami").read()
 		self.speak("Hello " + master)
 		while True:
-			#speec = self.listen()
-			speec = "remind me to take a bath in 1 minute"
+			speec = self.listen()
+			#speec = "remind me to take a bath in 1 minute"
 			if not "plus" in speec or "minus" in speec or "multiply" in speec or "divide" in speec:
 				string = speec.split(" and ")
 
