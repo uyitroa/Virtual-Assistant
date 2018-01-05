@@ -1,4 +1,5 @@
 #importing stuffs
+print 'importing'
 import sys
 sys.path.append("/usr/local/lib/python2.7/site-packages/")
 from multiprocessing import Pool
@@ -28,6 +29,7 @@ from datetime import datetime
 from datetime import date
 import parsedatetime as pdt
 
+print "imported"
 
 
 class MyFrame:
